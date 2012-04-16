@@ -1,0 +1,10 @@
+{
+  "env": {
+    "local": {
+      "db": "http://127.0.0.1:5984/billplanner"
+    },
+    "cloudant": {
+      "db": "http://reterressencessintediver:4ekErOV2HN87T1H4nfTNIXER@atljeremy.cloudant.com/billplanner"
+    }
+  }
+}

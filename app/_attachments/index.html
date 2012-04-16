@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<!--
+Deliverable 2
+Author: Jeremy Fox
+Created For: ASD Online
+index.html
+-->
+
+<html class="ui-mobile-rendering">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="keywords" content="bill planner, bill, planner, planning, bills" />
+    <meta name="description" content="Bill Planner is a mobile web application that helps you stay on track!" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta name="HandheldFriendly" content="true" />
+    <title>Bill Planner</title>
+    
+    <!-- jQuery Mobile CSS -->
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+    <!-- unoSlider CSS -->
+    <link rel="stylesheet" href="css/unoslider.css" />
+    <!-- unoSlider theme CSS -->
+    <link rel="stylesheet" href="css/themes/smooth/theme.css" />
+    <!-- jquery ui -->
+    <link type="text/css" href="css/dark-hive/jquery-ui-1.8.17.custom.css" rel="stylesheet" />
+    <!-- My CSS -->
+    <link rel="stylesheet" href="css/min/styles.css" type="text/css" />
+
+  </head>
+
+  <body id="home">
+
+    <div data-role="page" id="home" data-dom-cache="true" data-theme="c">
+  
+    	<div data-role="header">
+        <a href="" class="hidden"></a>
+        <img src="i/bill-planner-logo.png" id="headerBranding" alt="Bill Planner" />
+    		<a href="#">
+        <img id="billSearch" src="i/search.png" alt="Search Bills"/>
+        <img id="billSearchHide" src="i/search-hide.png" alt="Search Bills"/>
+        </a>
+    	</div><!-- /header -->
+    
+      <!-- unoSlider markup -->
+      <ul id="unoslider" class="unoslider">
+      	<li><img id="cta-bills" src="i/cta-bills.png" /></li>
+      	<li><img id="cta-accounts" src="i/cta-accounts.png" /></li>
+      </ul>
+    
+    	<div data-role="content" id="homeContent">
+    	
+        <!-- Search Form To Replace Header Branding -->
+        <div id="searchFormContainer">
+    		  <form action="#" method="post" id="searchForm" data-ajax="false">
+    		    <input type="text" id="searchTerm" required maxlength="25" placeholder="Enter Search Term" />
+    		  </form>
+    		</div>
+
+        <div id="grid">
+          <span class="sectionHeader">Browse</span>
+          <div class="row">
+            <div class="cell">
+              <a href="#">
+                <div id="addBill" class="gridBlock">
+                  <img class="gridIcon" src="i/plus_lg.png" alt="Add A Bill"/>
+                  <span class="gridText">Add A Bill</span>
+                </div>
+              </a>
+            </div>
+            <div class="cell">
+              <a href="#">
+                <div id="viewBills" class="gridBlock">
+                  <img class="gridIcon" src="i/bills_lg.png" alt="View Bills"/>
+                  <span class="gridText">View Bills</span>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="cell">
+              <a href="#">
+                <div id="accounts" class="gridBlock">
+                  <img class="gridIcon" src="i/wallet_lg.png" alt="Manage Accounts"/>
+                  <span class="gridText">Accounts</span>
+                </div>
+              </a>
+            </div>
+            <div class="cell">
+              <a href="#">
+                <div id="faq" class="gridBlock">
+                  <img class="gridIcon" src="i/question_lg.png" alt="Need help? Get Answer."/>
+                  <span class="gridText">FAQ's</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <section id="homeItemsSection">
+          <div id="postswrapper">
+            <div class="item">
+              <div id="itemsHeader">Bills</div>
+                <ul id="homeItems">
+                  <!-- Bills will be populated here programmatically -->
+                </ul>
+              </div>
+            <div id="loadmoreajaxloader">Loading… <br /><img src="i/ajax-loader.gif"/></div>
+          </div>
+      	</section>
+
+      </div> <!-- /content -->
+
+      <section class="center">
+        <div data-role="controlgroup" data-type="horizontal" id="linksData"> 
+          <a href="#" data-role="button" id="displayJson">Load JSON</a>
+          <a href="#" data-role="button" id="displayXML">Load XML</a>
+          <a href="#" data-role="button" id="displayCSV">Load CSV</a>
+        </div>
+      </section>
+    
+      <div data-role="footer">
+        <h4>&copy; Jeremy Fox 2012</h4>
+      </div> <!-- /footer -->
+      
+    </div> <!-- /page -->
+    
+    <!-- Underscore is a utility-belt library for JavaScript that provides a lot of the functional programming support -->
+    <script src="js/libs/underscore-v1.2.4.js"></script>   
+    <!-- jQuery - required for jQuery Mobile -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!-- jquery ui -->
+    <script src="js/libs/jquery-ui-1.8.17.custom.min.js"></script>
+    <!-- jQuery Validator -->
+    <script src="js/libs/jquery-validation/jquery.validate.min.js"></script>
+    <!-- unoSlider JS -->
+    <script src="js/libs/unoslider.dev.js"></script>
+    <!-- My JS -->
+    <script src="js/min/json.js"></script>
+    <script src="js/min/main.js"></script>
+    <!-- jQuery Mobile JS -->
+    <script src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script> 
+
+    <!-- unoSlider initializer -->
+    <script type='text/javascript'>
+		  $(document).ready(function(){ 
+				$('#unoslider').unoslider({
+				  navigation: false,
+				  animation: {  
+            transition: 'slide_out', 
+            variation: 'right',
+            speed: 1000
+          },
+          slideshow: {
+            speed: 5
+          },
+          block: {
+            vertical: 1,
+            horizontal: 1
+          }
+				});
+		  });
+		  
+		  $('#accountsPage').live('pageshow', function(e){
+				// Tabs
+				$('#tabs').tabs();
+				
+				//hover states on the static widgets
+				$('#dialog_link, ul#icons li').hover(
+					function() { $(this).addClass('ui-state-hover'); }, 
+					function() { $(this).removeClass('ui-state-hover'); }
+				);
+		  });
+		  
+      $('#details').live('pageshow',function(e){
+        $.mobile.details();
+      });
+    </script>
+    
+  </body>
+</html>

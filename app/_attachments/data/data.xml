@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+  <bills>
+    <bill>
+      <id>123234545</id>
+  		<name-title>Name:</name-title>
+  		<name>John Doe</name>
+  		<payto-title>Pay To:</payto-title>
+  		<payto>Kaiser Permanente</payto>
+  		<amount-title>Amount:</amount-title>
+  		<amount>635</amount>
+  		<account-title>From Account:</account-title>
+  		<account>Wells Fargo - Credit Card</account>
+  		<payon-title>Pay On:</payon-title>
+  		<payon>2012-07-05</payon>
+  		<notes-title>Notes:</notes-title>
+  		<notes>Medical bill for delivery of our child.</notes>
+  		<remember-title>Remember This Payment:</remember-title>
+  		<remember>No</remember>
+  	</bill>
+  	<bill>
+      <id>123456789</id>
+  		<name-title>Name:</name-title>
+  		<name>John Doe</name>
+  		<payto-title>Pay To:</payto-title>
+  		<payto>Jackson EMC</payto>
+  		<amount-title>Amount:</amount-title>
+  		<amount>157</amount>
+  		<account-title>From Account:</account-title>
+  		<account>Wells Fargo - Checking</account>
+  		<payon-title>Pay On:</payon-title>
+  		<payon>2012-05-15</payon>
+  		<notes-title>Notes:</notes-title>
+  		<notes>Electric bill</notes>
+  		<remember-title>Remember This Payment:</remember-title>
+  		<remember>Yes</remember>
+  	</bill>
+  	<bill>
+      <id>123654785</id>
+  		<name-title>Name:</name-title>
+  		<name>John Doe</name>
+  		<payto-title>Pay To:</payto-title>
+  		<payto>Kaiser Permanente</payto>
+  		<amount-title>Amount:</amount-title>
+  		<amount>635</amount>
+  		<account-title>From Account:</account-title>
+  		<account>Wells Fargo - Credit Card</account>
+  		<payon-title>Pay On:</payon-title>
+  		<payon>2012-07-05</payon>
+  		<notes-title>Notes:</notes-title>
+  		<notes>Medical bill for delivery of our child.</notes>
+  		<remember-title>Remember This Payment:</remember-title>
+  		<remember>No</remember>
+  	</bill>
+  	<bill>
+      <id>125412541</id>
+  		<name-title>Name:</name-title>
+  		<name>John Doe</name>
+  		<payto-title>Pay To:</payto-title>
+  		<payto>Kaiser Permanente</payto>
+  		<amount-title>Amount:</amount-title>
+  		<amount>635</amount>
+  		<account-title>From Account:</account-title>
+  		<account>Bank of America - Credit Card</account>
+  		<payon-title>Pay On:</payon-title>
+  		<payon>2012-07-05</payon>
+  		<notes-title>Notes:</notes-title>
+  		<notes>Medical bill for delivery of our child.</notes>
+  		<remember-title>Remember This Payment:</remember-title>
+  		<remember>No</remember>
+  	</bill>
+  	<bill>
+      <id>159357852</id>
+  		<name-title>Name:</name-title>
+  		<name>Jane Doe</name>
+  		<payto-title>Pay To:</payto-title>
+  		<payto>Comcast</payto>
+  		<amount-title>Amount:</amount-title>
+  		<amount>187</amount>
+  		<account-title>From Account:</account-title>
+  		<account>Bank of America - Checking</account>
+  		<payon-title>Pay On:</payon-title>
+  		<payon>2012-06-24</payon>
+  		<notes-title>Notes:</notes-title>
+  		<notes>Tv/Internet bill. Need to call Comcast and ask about adding telephone VOIP service.</notes>
+  		<remember-title>Remember This Payment:</remember-title>
+  		<remember>Yes</remember>
+  	</bill>
+    <bill>
+      <id>564589545</id>
+  		<name-title>Name:</name-title>
+  		<name>Jane Doe</name>
+  		<payto-title>Pay To:</payto-title>
+  		<payto>Jackson EMC</payto>
+  		<amount-title>Amount:</amount-title>
+  		<amount>75</amount>
+  		<account-title>From Account:</account-title>
+  		<account>Bank of America - Checking</account>
+  		<payon-title>Pay On:</payon-title>
+  		<payon>2012-09-13</payon>
+  		<notes-title>Notes:</notes-title>
+  		<notes>Tv/Internet bill. Need to call Comcast and ask about adding telephone VOIP service.</notes>
+  		<remember-title>Remember This Payment:</remember-title>
+  		<remember>Yes</remember>
+  	</bill>
+    <bill>
+      <id>565686868</id>
+  		<name-title>Name:</name-title>
+  		<name>Jane Doe</name>
+  		<payto-title>Pay To:</payto-title>
+  		<payto>Fullsail</payto>
+  		<amount-title>Amount:</amount-title>
+  		<amount>250</amount>
+  		<account-title>From Account:</account-title>
+  		<account>Bank of America - Checking</account>
+  		<payon-title>Pay On:</payon-title>
+  		<payon>2012-11-05</payon>
+  		<notes-title>Notes:</notes-title>
+  		<notes>Tv/Internet bill. Need to call Comcast and ask about adding telephone VOIP service.</notes>
+  		<remember-title>Remember This Payment:</remember-title>
+  		<remember>Yes</remember>
+  	</bill>
+  </bills>

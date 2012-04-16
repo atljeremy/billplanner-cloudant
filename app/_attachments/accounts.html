@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<!--
+Deliverable 1
+Author: Jeremy Fox
+Created For: ASD Online
+accounts.html
+-->
+
+<html class="ui-mobile-rendering">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="keywords" content="bill planner, bill, planner, planning, bills" />
+    <meta name="description" content="Bill Planner is a mobile web application that helps you stay on track!" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta name="HandheldFriendly" content="true" />
+    <title>Bill Planner</title>
+    
+    <!-- jQuery Mobile CSS -->
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+    <!-- My CSS -->
+    <link rel="stylesheet" href="css/min/styles.css" type="text/css" />
+    <!-- jquery ui -->
+    <link type="text/css" href="css/dark-hive/jquery-ui-1.8.17.custom.css" rel="stylesheet" />
+    
+    <!-- Underscore is a utility-belt library for JavaScript that provides a lot of the functional programming support -->
+    <script src="js/libs/underscore-v1.2.4.js"></script>
+    <!-- jQuery - required for jQuery Mobile -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!-- jquery ui -->
+    <script type="text/javascript" src="js/libs/jquery-ui-1.8.17.custom.min.js"></script>
+    <!-- jQuery Validator -->
+    <script src="js/libs/jquery-validation/jquery.validate.min.js"></script>
+    <!-- My JS -->
+    <script src="js/min/json.js"></script>
+    <script src="js/min/main.js"></script>
+    <!-- jQuery Mobile JS -->
+    <script src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+    
+    <script type="text/javascript">
+			$(function(){
+	
+				// Tabs
+				$('#tabs').tabs();
+				
+				//hover states on the static widgets
+				$('#dialog_link, ul#icons li').hover(
+					function() { $(this).addClass('ui-state-hover'); }, 
+					function() { $(this).removeClass('ui-state-hover'); }
+				);
+				
+			});
+		</script>
+
+  </head>
+
+  <body id="PAGETOP">
+  
+    <div data-role="page" id="accountsPage" data-dom-cache="true" data-theme="c">
+  
+    	<div data-role="header">
+        <a href="index.html">
+          <img src="i/grid.png" alt="Go To Home"/>
+        </a>
+        <img src="i/bill-planner-logo.png" id="headerBranding" alt="Bill Planner" />
+    		<a href="additem.html" data-ajax="false">
+          <img src="i/plus.png" alt="Add A New Bill"/>
+        </a>
+    	</div><!-- /header -->
+    
+    	<div data-role="content">	
+
+        <div id="tabs">
+        	<ul>
+        		<li><a href="#tabs-1">Accounts</a></li>
+        		<li><a href="#tabs-2">Add Account</a></li>
+        	</ul>
+        	<div id="tabs-1">
+        		<p>You have set up the following accounts.</p>
+        		
+        		<p>
+        		<ul>
+        		  <li class="accountsList">Bank of America - Checking <img src="i/x.png" class="accountsDelete" /></li>
+        		  <li class="accountsList">Bank of America - Savings <img src="i/x.png" class="accountsDelete" /></li>
+        		  <li class="accountsList">Bank of America - Credit <img src="i/x.png" class="accountsDelete" /></li>
+        		</ul>
+        		</p>
+        	</div>
+        	<div id="tabs-2">
+        		<p>Fill in form below to add a new account.</p>
+        		
+        		<p>
+        		<form action="#" id="accountForm" method="post" data-ajax="false">
+        		  <ul>
+        		    <li id="actBank">
+        		      <label for="accountBank" class="sectionHeader">Bank:</label>
+        		      <input type="text" id="accountBank" name="accountBank" maxlength="20" class="accountInput" placeholder="Bank of America" onblur="actBank()" />
+        		    </li>
+        		    <li id="actType" class="hide">
+        		      <label for="accountType" class="sectionHeader">Type: </label>
+        		      <select id="accountType" onchange="actType()">
+        		        <option value="choose">Choose Account Type</option>
+        		        <option value="checking">Checking</option>
+        		        <option value="savings">Savings</option>
+        		        <option value="credit">Credit</option>
+        		      </select>
+        		    </li>
+        		    <li id="actExp" class="hide">
+        		      <label for="accountExipration" class="sectionHeader">Expiration:</label>
+        		      <input type="text" id="accountExpiration" name="accountExpiration" maxlength="30" class="accountInput" placeholder="08/2015" onblur="actExp()" />
+        		    </li>
+        		    <li id="actNum" class="hide">
+        		      <label for="accountNumber" class="sectionHeader">Act. #:</label>
+        		      <input type="text" id="accountNumber" name="accountNumber" maxlength="75" class="accountInput" placeholder="1234-5678-9101-1121" onblur="actNum()" />
+        		    </li>
+        		  </ul>
+        		  
+        		  <div id="accountSubmitBtn" class="hide">
+                <input type="submit" id="submitAccountForm" value="Add This Account"/>
+              </div>
+        		</form>
+        		</p>
+        	</div>
+        </div>
+
+    	</div><!-- /content -->
+
+    	<div data-role="footer">
+    		<h2>&copy; Jeremy Fox 2012</h2>
+    	</div><!-- /footer -->
+  	
+    </div><!-- /page -->
+        
+  </body>
+</html>
