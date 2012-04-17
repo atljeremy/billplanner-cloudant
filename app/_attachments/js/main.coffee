@@ -89,7 +89,7 @@ Main Metheds
     itemId = newDate.getTime()
   else
     itemId = @getKeyToEdit()
-
+    
   item = {}
   item.name     = ["Name:", $("#name").val()]
   item.payto    = ["Pay To:", $("#payTo").val()]
@@ -308,7 +308,7 @@ editItem = =>
     @displayData()
   , 500)
   
-deleteItem = (key, rev) ->
+deleteItem = (key, rev) =>
   ask = confirm "Are you sure you want to delete this bill?"
   if ask
     $.ajax
@@ -349,7 +349,7 @@ showAccount = (key) ->
 ###**********************************************************
 Click Events
 **********************************************************###
-$("#billForm").live "submit", (e) ->
+$("#billForm").live "submit", (e) =>
   stopEvent(e)
   _rev = $('#_rev').val()
   isUpdate = ((typeof _rev isnt "undefined") and (_rev isnt null or ""))
@@ -370,8 +370,6 @@ $("#billForm").live "submit", (e) ->
       updateJson.notes    = ["Notes:", $("#notes").val()]
       updateJson.remember = ["Remember This Payment:", getFavValue()]
       json = JSON.stringify updateJson
-
-      console.log @cloudantURL + updateJson._id
 
       $.ajax
         type: "PUT"

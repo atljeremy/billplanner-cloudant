@@ -319,7 +319,7 @@ Variables
     if (ask) {
       $.ajax({
         type: "DELETE",
-        url: this.cloudantURL + key,
+        url: _this.cloudantURL + key,
         headers: {
           "If-Match": rev
         },
@@ -386,10 +386,9 @@ Variables
         updateJson.notes = ["Notes:", $("#notes").val()];
         updateJson.remember = ["Remember This Payment:", getFavValue()];
         json = JSON.stringify(updateJson);
-        console.log(this.cloudantURL + updateJson._id);
         $.ajax({
           type: "PUT",
-          url: this.cloudantURL + updateJson._id,
+          url: _this.cloudantURL + updateJson._id,
           data: json,
           success: function(data) {
             var response;
@@ -417,7 +416,7 @@ Variables
         json = JSON.stringify(newJson);
         $.ajax({
           type: "POST",
-          url: this.cloudantURL,
+          url: _this.cloudantURL,
           dataType: "json",
           data: json,
           success: function(data) {
