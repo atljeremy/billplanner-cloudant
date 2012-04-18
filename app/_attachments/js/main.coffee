@@ -254,7 +254,7 @@ qryBills = (json) ->
     
     payTo = bill.payto[1]
     if payTo.length >= 20
-      payTo = payTo.substr(0, 20) + "…"
+      payTo = payTo.substr(0, 20) + "..."
       
     payAmount = "$" + bill.amount[1]
     payDate = "(" + bill.payon[1] + ")"
@@ -289,6 +289,12 @@ editItem = =>
   $('#notes').val bill.notes[1]
   _rev = $('<input>').attr('id', '_rev').attr('name', '_rev').attr('type', 'hidden').val(bill._rev)
   _id = $('<input>').attr('id', '_id').attr('name', '_id').attr('type', 'hidden').val(bill._id)
+  _revExists = ($('#_rev').length > 0)
+  _idExists = ($('#_id').length > 0)
+  if _revExists
+    $('#_rev').remove()
+  if _idExists
+  	$('#_id').remove()
   $('#billForm').append _rev
   $('#billForm').append _id
   radios = $("input[type='radio']")
@@ -353,12 +359,10 @@ $("#billForm").live "submit", (e) =>
   stopEvent(e)
   _rev = $('#_rev').val()
   isUpdate = ((typeof _rev isnt "undefined") and (_rev isnt null or ""))
-  
-  console.log isUpdate
-  
+
   if $("#billForm").valid()
     if isUpdate
-    
+
       updateJson = {}
       updateJson._id      = $("#_id").val()
       updateJson._rev     = $("#_rev").val()
@@ -375,7 +379,11 @@ $("#billForm").live "submit", (e) =>
         type: "PUT"
         url: @cloudantURL + updateJson._id
         data: json
-        success: (data) ->
+        headers:
+          "Access-Control-Allow-Origin" : "*"
+          "Access-Control-Allow-Headers" : "Origin, X-Requested-With, Content-Type, Accept"
+          "Access-Control-Allow-Methods" : "POST, GET, PUT, DELETE, OPTIONS"
+        success: (data) =>
           response = JSON.parse data
           if response.ok
             setInvalidated(true)
@@ -396,12 +404,17 @@ $("#billForm").live "submit", (e) =>
       newJson.remember = ["Remember This Payment:", getFavValue()]
       json = JSON.stringify newJson
       
+      newDate = new Date()
+      
       $.ajax
-        type: "POST"
-        url: @cloudantURL
-        dataType: "json"
+        type: "PUT"
+        url: @cloudantURL + newDate.getTime()
         data: json
-        success: (data) ->
+        headers:
+          "Access-Control-Allow-Origin" : "*"
+          "Access-Control-Allow-Headers" : "Origin, X-Requested-With, Content-Type, Accept"
+          "Access-Control-Allow-Methods" : "POST, GET, PUT, DELETE, OPTIONS"
+        success: (data) =>
           response = JSON.parse data
           if response.ok
             setInvalidated(true)
@@ -763,7 +776,7 @@ setupBillDetails = (key, json) ->
   )
   
   #for each bill in the billObj do the following
-  _.each(billObj, (bill, key) ->
+  _.each(billObj, (bill, k) ->
     #Make a list item
     makeSubListItem = $("<li>")
     
@@ -785,7 +798,7 @@ setupBillDetails = (key, json) ->
     makeSubListItem.append field
     makeSubListItem.append value
     
-    switch key
+    switch k
       when "_id" then field.html "ID: "; value.html bill
       when "_rev" then field.html "Revision: "; value.html bill
       else field.html bill[0] + " "; value.html bill[1]
@@ -859,7 +872,7 @@ createListWithJsonData = (data) ->
     
     payTo = bill.payto[1]
     if payTo.length >= 20
-      payTo = payTo.substr(0, 20) + "…"
+      payTo = payTo.substr(0, 20) + "..."
       
     payAmount = "$" + bill.amount[1]
     payDate = "(" + bill.payon[1] + ")"
@@ -924,7 +937,7 @@ createListWithXMLData = (data) ->
     
     payTo = $(bill).find("payto").text()
     if payTo.length >= 20
-      payTo = payTo.substr(0, 20) + "…"
+      payTo = payTo.substr(0, 20) + "..."
       
     payAmount = "$" + $(bill).find("amount").text()
     payDate = "(" + $(bill).find("payon").text() + ")"
@@ -991,7 +1004,7 @@ createListWithCSVData = (data) ->
       
       payTo = details[5]
       if payTo.length >= 20
-        payTo = payTo.substr(0, 20) + "…"
+        payTo = payTo.substr(0, 20) + "..."
         
       payAmount = "$" + details[7]
       payDate = "(" + details[11] + ")"

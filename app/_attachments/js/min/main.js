@@ -263,7 +263,7 @@ Variables
         return false;
       });
       payTo = bill.payto[1];
-      if (payTo.length >= 20) payTo = payTo.substr(0, 20) + "…";
+      if (payTo.length >= 20) payTo = payTo.substr(0, 20) + "...";
       payAmount = "$" + bill.amount[1];
       payDate = "(" + bill.payon[1] + ")";
       makeLink.html(payTo + " " + payAmount + " " + payDate);
@@ -272,7 +272,7 @@ Variables
   };
 
   editItem = function() {
-    var bill, key, radio, radios, _i, _id, _len, _rev;
+    var bill, key, radio, radios, _i, _id, _idExists, _len, _rev, _revExists;
     bill = getDetailsJson();
     key = bill._id;
     _this.setKeyToEdit(key);
@@ -292,6 +292,10 @@ Variables
     $('#notes').val(bill.notes[1]);
     _rev = $('<input>').attr('id', '_rev').attr('name', '_rev').attr('type', 'hidden').val(bill._rev);
     _id = $('<input>').attr('id', '_id').attr('name', '_id').attr('type', 'hidden').val(bill._id);
+    _revExists = $('#_rev').length > 0;
+    _idExists = $('#_id').length > 0;
+    if (_revExists) $('#_rev').remove();
+    if (_idExists) $('#_id').remove();
     $('#billForm').append(_rev);
     $('#billForm').append(_id);
     radios = $("input[type='radio']");
@@ -368,11 +372,10 @@ Variables
   */
 
   $("#billForm").live("submit", function(e) {
-    var isUpdate, json, newJson, updateJson, _rev;
+    var isUpdate, json, newDate, newJson, updateJson, _rev;
     stopEvent(e);
     _rev = $('#_rev').val();
     isUpdate = (typeof _rev !== "undefined") && (_rev !== null || "");
-    console.log(isUpdate);
     if ($("#billForm").valid()) {
       if (isUpdate) {
         updateJson = {};
@@ -390,12 +393,17 @@ Variables
           type: "PUT",
           url: _this.cloudantURL + updateJson._id,
           data: json,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+            "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS"
+          },
           success: function(data) {
             var response;
             response = JSON.parse(data);
             if (response.ok) {
               setInvalidated(true);
-              this.setKeyToEdit(0);
+              _this.setKeyToEdit(0);
               $("legend").html("<h2>Create a New Bill</h2>");
               return alert("Bill Updated Successfully!");
             }
@@ -414,19 +422,24 @@ Variables
         newJson.notes = ["Notes:", $("#notes").val()];
         newJson.remember = ["Remember This Payment:", getFavValue()];
         json = JSON.stringify(newJson);
+        newDate = new Date();
         $.ajax({
-          type: "POST",
-          url: _this.cloudantURL,
-          dataType: "json",
+          type: "PUT",
+          url: _this.cloudantURL + newDate.getTime(),
           data: json,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+            "Access-Control-Allow-Methods": "POST, GET, PUT, DELETE, OPTIONS"
+          },
           success: function(data) {
             var response;
             response = JSON.parse(data);
             if (response.ok) {
               setInvalidated(true);
               alert("Bill Added!");
-              this.setKeyToEdit(0);
-              return this.displayData();
+              _this.setKeyToEdit(0);
+              return _this.displayData();
             }
           },
           error: function(error) {
@@ -785,7 +798,7 @@ Variables
     $("#account-" + key).click("click", function(e) {
       return showAccount(key);
     });
-    _.each(billObj, function(bill, key) {
+    _.each(billObj, function(bill, k) {
       var field, makeSubListItem, value;
       makeSubListItem = $("<li>");
       if (bill[0] === "From Account:") {
@@ -798,7 +811,7 @@ Variables
       value.attr("class", "billValue");
       makeSubListItem.append(field);
       makeSubListItem.append(value);
-      switch (key) {
+      switch (k) {
         case "_id":
           field.html("ID: ");
           value.html(bill);
@@ -885,7 +898,7 @@ Variables
         return false;
       });
       payTo = bill.payto[1];
-      if (payTo.length >= 20) payTo = payTo.substr(0, 20) + "…";
+      if (payTo.length >= 20) payTo = payTo.substr(0, 20) + "...";
       payAmount = "$" + bill.amount[1];
       payDate = "(" + bill.payon[1] + ")";
       makeLink.html(payTo + " " + payAmount + " " + payDate);
@@ -944,7 +957,7 @@ Variables
         return false;
       });
       payTo = $(bill).find("payto").text();
-      if (payTo.length >= 20) payTo = payTo.substr(0, 20) + "…";
+      if (payTo.length >= 20) payTo = payTo.substr(0, 20) + "...";
       payAmount = "$" + $(bill).find("amount").text();
       payDate = "(" + $(bill).find("payon").text() + ")";
       makeLink.html(payTo + " " + payAmount + " " + payDate);
@@ -1006,7 +1019,7 @@ Variables
           return false;
         });
         payTo = details[5];
-        if (payTo.length >= 20) payTo = payTo.substr(0, 20) + "…";
+        if (payTo.length >= 20) payTo = payTo.substr(0, 20) + "...";
         payAmount = "$" + details[7];
         payDate = "(" + details[11] + ")";
         return makeLink.html(payTo + " " + payAmount + " " + payDate);
