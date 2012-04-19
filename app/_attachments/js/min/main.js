@@ -814,11 +814,11 @@ Variables
       switch (k) {
         case "_id":
           field.html("ID: ");
-          value.html(bill);
+          value.html((bill.length > 20 ? bill.substring(0, 18) + "..." : bill));
           break;
         case "_rev":
           field.html("Revision: ");
-          value.html(bill);
+          value.html("#" + bill.substring(0, bill.indexOf("-")));
           break;
         default:
           field.html(bill[0] + " ");
@@ -1061,7 +1061,7 @@ Variables
     if (getViewState()) {
       setInvalidated(true);
       _this.displayStaticData(false, true, null, "json");
-      $("#displayJson").text("Load JSON");
+      $("#displayJson").text("JSON");
       return $("#displayJson").css("padding", "0.65em 15px 0.6em 15px");
     } else {
       return loadJson();
@@ -1094,7 +1094,7 @@ Variables
     if (getViewState()) {
       setInvalidated(true);
       _this.displayStaticData(false, true, null, "xml");
-      $("#displayXML").text("Load XML");
+      $("#displayXML").text("XML");
       return $("#displayXML").css("padding", "0.65em 15px 0.6em 15px");
     } else {
       return loadXML();
@@ -1127,7 +1127,7 @@ Variables
     if (getViewState()) {
       setInvalidated(true);
       _this.displayStaticData(false, true, null, "csv");
-      $("#displayCSV").text("Load CSV");
+      $("#displayCSV").text("CSV");
       return $("#displayCSV").css("padding", "0.65em 15px 0.6em 15px");
     } else {
       return loadCSV();
@@ -1213,7 +1213,7 @@ Variables
     setViewState(false);
     hideStaticItems();
     viewHome();
-    $("#displayData").text("Load Json");
+    $("#displayData").text("JSON");
     $("#displayData").css("padding", "0.65em 15px 0.6em 15px");
   };
 
@@ -1221,7 +1221,7 @@ Variables
     setViewState(false);
     hideStaticItems();
     viewHome();
-    $("#displayData").text("Load XML");
+    $("#displayData").text("XML");
     $("#displayData").css("padding", "0.65em 15px 0.6em 15px");
   };
 
@@ -1229,7 +1229,7 @@ Variables
     setViewState(false);
     hideStaticItems();
     viewHome();
-    $("#displayData").text("Load CSV");
+    $("#displayData").text("CSV");
     $("#displayData").css("padding", "0.65em 15px 0.6em 15px");
   };
 

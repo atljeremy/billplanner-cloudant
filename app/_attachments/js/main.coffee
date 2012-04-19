@@ -799,8 +799,8 @@ setupBillDetails = (key, json) ->
     makeSubListItem.append value
     
     switch k
-      when "_id" then field.html "ID: "; value.html bill
-      when "_rev" then field.html "Revision: "; value.html bill
+      when "_id" then field.html "ID: "; value.html (if bill.length > 20 then bill.substring(0, 18)+"..." else bill)
+      when "_rev" then field.html "Revision: "; value.html "#"+bill.substring(0, bill.indexOf("-"))
       else field.html bill[0] + " "; value.html bill[1]
 
     true
@@ -814,7 +814,6 @@ setupBillDetails = (key, json) ->
 # Methods to show json / xml / csv
 ****************************************************************###
 getStaticData = (data, type) ->
-  
   switch type
     when "json" then createListWithJsonData(data)
     when "xml" then createListWithXMLData(data)
@@ -883,7 +882,6 @@ createListWithJsonData = (data) ->
   )
   
 createListWithXMLData = (data) ->
-  
   bills = $(data).find('bill')
   
   i = 1
@@ -948,7 +946,6 @@ createListWithXMLData = (data) ->
   )
   
 createListWithCSVData = (data) ->
-  
   bills = csvToArray(data)
   
   i = 1
@@ -1036,12 +1033,11 @@ setupStaticBills = (data) ->
 # JSON
 **********************************************************###
 $("#displayJson").live("click", (e) =>
-
   stopEvent(e)
   if getViewState()
     setInvalidated(true)
     @displayStaticData(false, true, null, "json")
-    $("#displayJson").text "Load JSON"
+    $("#displayJson").text "JSON"
     $("#displayJson").css "padding", "0.65em 15px 0.6em 15px"
   else
     loadJson()
@@ -1067,7 +1063,7 @@ $("#displayXML").live("click", (e) =>
   if getViewState()
     setInvalidated(true)
     @displayStaticData(false, true, null, "xml")
-    $("#displayXML").text "Load XML"
+    $("#displayXML").text "XML"
     $("#displayXML").css "padding", "0.65em 15px 0.6em 15px"
   else
     loadXML()
@@ -1088,12 +1084,11 @@ loadXML = ->
 # CSV
 **********************************************************###
 $("#displayCSV").live("click", (e) =>
-
   stopEvent(e)
   if getViewState()
     setInvalidated(true)
     @displayStaticData(false, true, null, "csv")
-    $("#displayCSV").text "Load CSV"
+    $("#displayCSV").text "CSV"
     $("#displayCSV").css "padding", "0.65em 15px 0.6em 15px"
   else
     loadCSV()
@@ -1168,7 +1163,7 @@ csvToArray = (strData, strDelimiter) ->
   setViewState(false)
   hideStaticItems()
   viewHome()
-  $("#displayData").text "Load Json"
+  $("#displayData").text "JSON"
   $("#displayData").css "padding", "0.65em 15px 0.6em 15px"
   return
 
@@ -1176,7 +1171,7 @@ csvToArray = (strData, strDelimiter) ->
   setViewState(false)
   hideStaticItems()
   viewHome()
-  $("#displayData").text "Load XML"
+  $("#displayData").text "XML"
   $("#displayData").css "padding", "0.65em 15px 0.6em 15px"
   return
   
@@ -1184,7 +1179,7 @@ csvToArray = (strData, strDelimiter) ->
   setViewState(false)
   hideStaticItems()
   viewHome()
-  $("#displayData").text "Load CSV"
+  $("#displayData").text "CSV"
   $("#displayData").css "padding", "0.65em 15px 0.6em 15px"
   return
   
