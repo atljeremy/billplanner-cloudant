@@ -357,8 +357,9 @@ Click Events
 **********************************************************###
 $("#billForm").live "submit", (e) =>
   stopEvent(e)
-  _rev = $('#_rev').val()
-  isUpdate = ((typeof _rev isnt "undefined") and (_rev isnt null or ""))
+  _rev = $('#_rev')
+  _id = $('#_id')
+  isUpdate = ((typeof _rev.val() isnt "undefined") and (_rev.val() isnt null or ""))
 
   if $("#billForm").valid()
     if isUpdate
@@ -390,6 +391,10 @@ $("#billForm").live "submit", (e) =>
             @setKeyToEdit(0)
             $("legend").html("<h2>Create a New Bill</h2>")
             alert "Bill Updated Successfully!"
+            @setKeyToEdit(0)
+            _rev.remove()
+            _id.remove()
+            @displayData()
         error: (error) ->
           alert "ERROR: " + error.statusText
     else

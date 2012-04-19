@@ -372,10 +372,11 @@ Variables
   */
 
   $("#billForm").live("submit", function(e) {
-    var isUpdate, json, newDate, newJson, updateJson, _rev;
+    var isUpdate, json, newDate, newJson, updateJson, _id, _rev;
     stopEvent(e);
-    _rev = $('#_rev').val();
-    isUpdate = (typeof _rev !== "undefined") && (_rev !== null || "");
+    _rev = $('#_rev');
+    _id = $('#_id');
+    isUpdate = (typeof _rev.val() !== "undefined") && (_rev.val() !== null || "");
     if ($("#billForm").valid()) {
       if (isUpdate) {
         updateJson = {};
@@ -405,7 +406,11 @@ Variables
               setInvalidated(true);
               _this.setKeyToEdit(0);
               $("legend").html("<h2>Create a New Bill</h2>");
-              return alert("Bill Updated Successfully!");
+              alert("Bill Updated Successfully!");
+              _this.setKeyToEdit(0);
+              _rev.remove();
+              _id.remove();
+              return _this.displayData();
             }
           },
           error: function(error) {
