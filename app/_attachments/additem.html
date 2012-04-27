@@ -25,9 +25,10 @@ additem.html
     
     <!-- Underscore is a utility-belt library for JavaScript that provides a lot of the functional programming support -->
     <script src="js/libs/underscore-v1.2.4.js"></script>
-    
     <!-- jQuery - required for jQuery Mobile -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <!-- jQuery CouchDB Plugin -->
+    <script src="js/libs/jquery.couch.js"></script>
     <!-- jQuery Validator -->
     <script src="js/libs/jquery-validation/jquery.validate.min.js"></script>
     <!-- My JS -->
@@ -115,6 +116,8 @@ additem.html
       <script type="text/javascript">
         $.mobile.accounts();
         $.mobile.date();
+        // Get accounts
+        $.mobile.fetchAccounts();
       </script>
   	
     </div><!-- /page -->

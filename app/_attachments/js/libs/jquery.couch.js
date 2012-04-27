@@ -38,7 +38,7 @@
   var uuidCache = [];
 
   $.extend($.couch, {
-    urlPrefix: '',
+    urlPrefix: 'https://onglandistanyboubtaindeg:7kD3juiBXaEP82dEXBmiGQkX@atljeremy.cloudant.com',
 
     // You can obtain a list of active tasks by using the `/_active_tasks` URL.
     // The result is a JSON array of the currently running tasks, with each task
@@ -397,6 +397,19 @@
           );
         },
 
+        allDocsWithDetails: function(options) {
+          var type = "GET";
+          var data = null;
+          return ajax({
+              type: type,
+              data: data,
+              url: this.uri + "_all_docs?include_docs=true"
+            },
+            options,
+            "An error occurred retrieving a list of all documents"
+          );
+        },
+
         // Fetch all the design docs in this db
         allDesignDocs: function(options) {
           return this.allDocs($.extend(
@@ -476,6 +489,7 @@
           options = options || {};
           var db = this;
           var beforeSend = fullCommit(options);
+
           if (doc._id === undefined) {
             var method = "POST";
             var uri = this.uri;

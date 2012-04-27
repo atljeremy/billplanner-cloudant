@@ -13,17 +13,19 @@ Variables
 @invalidateData       = false #set this to true when we need to force the app to re-query localStorage for new data.
 @keyToEdit            = 0 #The key of the item in localStorage we want to edit
 @cloudantURL          = "https://onglandistanyboubtaindeg:7kD3juiBXaEP82dEXBmiGQkX@atljeremy.cloudant.com/billplannerdata/"
-billAccounts          = [
-  "Please Select An Account",
-  "Bank of America - Checking",
-  "Bank of America - Savings",
-  "Bank of America - Credit Card",
-  "Wells Fargo - Checking",
-  "Wells Fargo - Savings",
-  "Wells Fargo - Credit Card"
-]
+@billAccounts         = ""
+#[
+#  "Please Select An Account",
+#  "Bank of America - Checking",
+#  "Bank of America - Savings",
+#  "Bank of America - Credit Card",
+#  "Wells Fargo - Checking",
+#  "Wells Fargo - Savings",
+#  "Wells Fargo - Credit Card"
+#]
 @detailsKey           = ""   # Key used to retreive bill details on details.html
 @detailsJson          = null # Json used to show bill on detials.html
+@accountDocToUpdate   = null # Accont CouchDB Document that is being updated
 
 ###**********************************************************
 State Control Methods
@@ -78,6 +80,24 @@ setDetailsJson = (json) =>
   
 getDetailsJson = =>
   return @detailsJson
+
+###**********************************************************
+Getter and Setter for accounts list
+**********************************************************###
+setAccountsList = (accounts) =>
+  @billAccounts = accounts
+
+getAccountsList = =>
+  return @billAccounts
+
+###**********************************************************
+Getter and Setter for account doc to update
+**********************************************************###
+setAccountToUpdate = (accountDoc) =>
+  @accountDocToUpdate = accountDoc
+
+getAccountToUpdate = =>
+  return @accountDocToUpdate
 
 ###**********************************************************
 Main Metheds
@@ -267,30 +287,30 @@ qryBills = (json) ->
 editItem = =>
   bill = getDetailsJson()
   key = bill._id
-  
+  _rev = $('<input>').attr('id', '_rev').attr('name', '_rev').attr('type', 'hidden').val(bill._rev)
+  _id = $('<input>').attr('id', '_id').attr('name', '_id').attr('type', 'hidden').val(bill._id)
+  _revExists = ($('#_rev').length > 0)
+  _idExists = ($('#_id').length > 0)
+
   @setKeyToEdit(key)
-  
-  $("legend").html("<h2>Your Editing a Bill - <a href=\"#\" id=\"cancelEdit\" data-ajax=\"false\" >Cancel</a></h2>")
-  
-  $("#cancelEdit").click("click", (e) ->
-    $.mobile.changePage( 'additem.html',
-      reloadPage: true,
-      allowSamePageTranstion: true,
-      transition: 'slide'
-    )
+
+  $("legend").html("<h2>Your Editing a Bill - <a href=\"#\" id=\"cancelEdit\" >Cancel</a></h2>")
+  $("#cancelEdit").click("click", (e) =>
+    if _revExists
+      $('#_rev').remove()
+    if _idExists
+      $('#_id').remove()
+    @setKeyToEdit(0)
+    @displayData(true, false)
+    $("legend").html("<h2>Create a New Bill</h2>")
   )
   
   $('#name').val bill.name[1]
   $('#payTo').val bill.payto[1]
   $('#payAmount').val bill.amount[1]
-  
   $('#payFrom').val bill.account[1]
   $('#payOn').val bill.payon[1]
   $('#notes').val bill.notes[1]
-  _rev = $('<input>').attr('id', '_rev').attr('name', '_rev').attr('type', 'hidden').val(bill._rev)
-  _id = $('<input>').attr('id', '_id').attr('name', '_id').attr('type', 'hidden').val(bill._id)
-  _revExists = ($('#_rev').length > 0)
-  _idExists = ($('#_id').length > 0)
   if _revExists
     $('#_rev').remove()
   if _idExists
@@ -338,7 +358,7 @@ deleteItem = (key, rev) =>
       error: (error) ->
         alert "ERROR: " + error.statusText
     return false
-    
+
 showAccount = (key) ->
   $("#li-account-"+key).animate
     opacity: 0.00
@@ -619,7 +639,7 @@ unBindClickListeners = () ->
   $(document).unbind("click")
   
 ###**********************************************************
-Add Account Page Form Methods
+# Account Page Methods
 **********************************************************###
 @actBank = ->
   if $("#accountBank").val() != null and $("#accountBank").val() != ""
@@ -648,41 +668,184 @@ Add Account Page Form Methods
     $("#accountSubmitBtn").removeClass("hide").addClass("show")
   else
     alert "Please enter your credit cards expiration date to conitue."
-    
-@addAccount = (account) ->
-  #something
 
-$("#accountForm").live "submit", (e) ->
+editAccount = (key) ->
+  accounts = getAccountsList()
+  for account in accounts
+    if account.doc._id is key
+      doc = account.doc
+  if doc?
+    setAccountToUpdate(doc)
+    $("#addAccountTab").click()
+    $("#accountFormNew").addClass("hide")
+    $("#accountFormEdit").removeClass("hide").addClass("show")
+    $("#accountsLabel").text("You are editing bill: "+doc.accountBank+" - "+doc.accountType)
+    $("#editAccountBank").val(doc.accountBank)
+    $("#editAccountType").val(doc.accountType)
+    $("#editAccountExpiration").val(doc.accountExp)
+    $("#editAccountNumber").val(doc.accountNumber)
+  else
+    alert "ERROR: No Account To Edit!"
+
+deleteAccount = (key) ->
+  accounts = getAccountsList()
+  for account in accounts
+    if account.doc._id is key
+      doc = account.doc
+  if doc?
+    ask = confirm "Are you sure you want to delete this Account?"
+    if ask
+      $.couch.db("billplanneraccounts").removeDoc(doc,
+        success: (data) ->
+          console.log(data)
+          if data.ok
+            $("#account-"+data.id).animate
+              opacity: 0.00
+              height: 'toggle'
+            , 1000
+            setTimeout(->
+              getAccounts(true)
+            , 1000)
+        error: (status) ->
+          alert(status)
+      )
+  else
+    alert "ERROR: No Account To Delete!"
+  return false
+
+emptyAccountsList = ->
+  $("#tabs-1 ul").empty()
+
+$("#submitAccountForm").live "click", (e) ->
   stopEvent(e)
-  formdata = $(this).serialize()
-  $.ajax
-    type: "POST"
-    url: "accounts.html"
-    data: formdata
-    success: ->
-      alert "Your account has been added! --THIS IS NOT ACTUALLING DOING ANYTHING JUST YET!--"
-    error: (error) ->
-      alert "ERROR: " + error.statusText
+
+  newDoc =
+#    _id: id
+    accountOwner: "Jeremy Fox",
+    accountBank: $("#accountBank").val()
+    accountType: $("#accountType").val()
+    accountNumber: $("#accountNumber").val()
+    accountExp: $("#accountExpiration").val()
+
+  $.couch.db("billplanneraccounts").saveDoc newDoc,
+    success: (data) ->
+      console.log data
+      alert "Account Added Successfully!"
+      getAccounts(true)
+      $("#accountsTab").click()
+
+    error: (status) ->
+      console.log status
+      alert "ERROR: An error occurred while trying to save your account."
+
+$("#editSubmitAccountForm").live "click", (e) =>
+  stopEvent(e)
+  actToUpdate = getAccountToUpdate()
+  id = actToUpdate._id
+  rev = actToUpdate._rev
+
+  editDoc =
+    _id: id
+    _rev: rev
+    accountOwner: "Jeremy Fox",
+    accountBank: $("#editAccountBank").val()
+    accountType: $("#editAccountType").val()
+    accountNumber: $("#editAccountNumber").val()
+    accountExp: $("#editAccountExpiration").val()
+
+  $.couch.db("billplanneraccounts").saveDoc editDoc,
+    success: (data) ->
+      console.log data
+      getAccounts(true)
+      alert "Account Updated Successfully!"
+      $("#accountsTab").click()
+      $("#accountFormEdit").removeClass("show").addClass("hide")
+      $("#accountFormNew").removeClass("hide").addClass("show")
+
+    error: (status) ->
+      console.log status
+      alert "ERROR: An error occurred while trying to save your updates."
 
 ###**********************************************************
 Bind to jQueries mobileinit
 **********************************************************###
 $(document).bind "mobileinit", ->
-  $.mobile.accounts     = getAccounts
-  $.mobile.date         = currentDate
-  $.mobile.details      = setupBillDetails
+  $.mobile.fetchAccounts = getAccounts
+  $.mobile.accounts      = createAccountsSelect
+  $.mobile.listAccounts  = createAccountsList
+  $.mobile.date          = currentDate
+  $.mobile.details       = setupBillDetails
   return
 
-getAccounts = ->
+getAccounts = (updateAccounts) ->
+  $.couch.db("billplanneraccounts").allDocsWithDetails(
+    success: (data) =>
+      console.log JSON.stringify data.rows
+      if updateAccounts
+        setAccountsList(data.rows)
+        createAccountsList()
+      else
+        setAccountsList(data.rows)
+
+    error: (status) ->
+      docs = [{"id":"05a2223222d5cf4e84b87a7e1f43af95","key":"05a2223222d5cf4e84b87a7e1f43af95","value":{"rev":"5-bcdd7b0c795360b8cc22a514c7f56df9"},"doc":{"_id":"05a2223222d5cf4e84b87a7e1f43af95","_rev":"5-bcdd7b0c795360b8cc22a514c7f56df9","accountOwner":"Jeremy Fox","accountBank":"Wells Fargo","accountType":"Credit","accountNumber":"4444333322221111","accountExp":"10-10-5432"}},{"id":"1020410ac2f0e04cc1bb262fcfa55954","key":"1020410ac2f0e04cc1bb262fcfa55954","value":{"rev":"3-123e6fd59e63de13842a1969eb6a20f6"},"doc":{"_id":"1020410ac2f0e04cc1bb262fcfa55954","_rev":"3-123e6fd59e63de13842a1969eb6a20f6","accountOwner":"Jeremy Fox","accountBank":"Wells Fargo","accountType":"Checking","accountNumber":"4444333322221111","accountExp":"10-10-5432"}},{"id":"316ad76341443c7743ae3d49a41e032d","key":"316ad76341443c7743ae3d49a41e032d","value":{"rev":"3-dd50d237b1388a730e66f5218fd5c022"},"doc":{"_id":"316ad76341443c7743ae3d49a41e032d","_rev":"3-dd50d237b1388a730e66f5218fd5c022","accountOwner":"Jeremy Fox","accountBank":"Wells Fargo","accountType":"Savings","accountNumber":"4444333322221111","accountExp":"10-10-5432"}},{"id":"594e5c7e5c3cdc1a424f5c3a85197661","key":"594e5c7e5c3cdc1a424f5c3a85197661","value":{"rev":"5-77f365fb066fd7145c6f5a4ad9f5e9c1"},"doc":{"_id":"594e5c7e5c3cdc1a424f5c3a85197661","_rev":"5-77f365fb066fd7145c6f5a4ad9f5e9c1","accountOwner":"Jeremy Fox","accountBank":"Bank of America","accountType":"Credit","accountNumber":"4444333322221111","accountExp":"10-10-5432"}},{"id":"594e5c7e5c3cdc1a424f5c3a85f24ef6","key":"594e5c7e5c3cdc1a424f5c3a85f24ef6","value":{"rev":"3-ed8006cf11713867f99e8bd3ebf0e102"},"doc":{"_id":"594e5c7e5c3cdc1a424f5c3a85f24ef6","_rev":"3-ed8006cf11713867f99e8bd3ebf0e102","accountOwner":"Jeremy Fox","accountBank":"Bank of America","accountType":"Savings","accountNumber":"4444333322221111","accountExp":"10-10-5432"}},{"id":"ab0a8d3611a41f3b43e2cec1c530068a","key":"ab0a8d3611a41f3b43e2cec1c530068a","value":{"rev":"1-d25315375946f0a2f8bbb3772a9e73f0"},"doc":{"_id":"ab0a8d3611a41f3b43e2cec1c530068a","_rev":"1-d25315375946f0a2f8bbb3772a9e73f0","accountOwner":"Jeremy Fox","accountBank":"Bank of America","accountType":"checking","accountNumber":"1234123412341234","accountExp":""}}]
+      setAccountsList(docs)
+
+      #alert("ERROR: Couldn't retreive accounts!" + status.responseText)
+  )
+
+createAccountsList = ->
+  emptyAccountsList()
+  accounts = getAccountsList()
+  accounts = accounts if accounts? and accounts isnt ""
+
+  tabsDivUl = $("#tabs-1 ul")
+
+  for account in accounts
+    key = account.key
+    act = account.doc.accountBank + " - " + account.doc.accountType
+    li = $("<li>")
+    li.attr "id", "account-"+key
+    li.attr "class", "accountsList"
+    li.attr "_key", key
+    xImg = $("<img>")
+    xImg.attr "id", "delete-"+key
+    xImg.attr "src", "i/x.png"
+    xImg.attr "class", "accountsDelete"
+    xImg.attr "_key", key
+    li.append act
+    li.append xImg
+    tabsDivUl.append li
+
+    #Set click listener on delete icon
+    $("#account-"+key).click("click", ->
+      editAccount($(this).attr("_key"))
+    )
+
+    #Set click listener on delete icon
+    $("#delete-"+key).click("click", ->
+      deleteAccount($(this).attr("_key"))
+    )
+
+  return
+
+createAccountsSelect = ->
+  accounts = getAccountsList()
+  if !accounts? or accounts is ""
+    getAccounts()
+
   liSelect   = $("#selectAccounts")
   makeSelect = $("<select>")
   makeSelect.attr "id", "payFrom"
   makeSelect.attr "class", "required"
-  for account in billAccounts
+
+  for account in accounts
+    act = account.doc.accountBank + " - " + account.doc.accountType
     makeOpt = $("<option>")
-    makeOpt.attr "value", account
-    makeOpt.html account
+    makeOpt.attr "value", act
+    makeOpt.html act
     makeSelect.append makeOpt
+
   liSelect.append makeSelect
   return
 

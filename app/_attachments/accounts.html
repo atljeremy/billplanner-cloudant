@@ -27,7 +27,9 @@ accounts.html
     <!-- Underscore is a utility-belt library for JavaScript that provides a lot of the functional programming support -->
     <script src="js/libs/underscore-v1.2.4.js"></script>
     <!-- jQuery - required for jQuery Mobile -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+    <!-- jQuery CouchDB Plugin -->
+    <script src="js/libs/jquery.couch.js"></script>
     <!-- jquery ui -->
     <script type="text/javascript" src="js/libs/jquery-ui-1.8.17.custom.min.js"></script>
     <!-- jQuery Validator -->
@@ -73,25 +75,26 @@ accounts.html
 
         <div id="tabs">
         	<ul>
-        		<li><a href="#tabs-1">Accounts</a></li>
-        		<li><a href="#tabs-2">Add Account</a></li>
+        		<li><a href="#tabs-1" id="accountsTab">Accounts</a></li>
+        		<li><a href="#tabs-2" id="addAccountTab">Add Account</a></li>
         	</ul>
         	<div id="tabs-1">
         		<p>You have set up the following accounts.</p>
         		
         		<p>
         		<ul>
-        		  <li class="accountsList">Bank of America - Checking <img src="i/x.png" class="accountsDelete" /></li>
-        		  <li class="accountsList">Bank of America - Savings <img src="i/x.png" class="accountsDelete" /></li>
-        		  <li class="accountsList">Bank of America - Credit <img src="i/x.png" class="accountsDelete" /></li>
+                    <!-- Accounts will be set here programatically -->
         		</ul>
         		</p>
         	</div>
         	<div id="tabs-2">
-        		<p>Fill in form below to add a new account.</p>
+        		<p><span id="accountsLabel">Fill in form below to add a new account.</span></p>
         		
         		<p>
-        		<form action="#" id="accountForm" method="post" data-ajax="false">
+
+                <!-- New Account Form-->
+                <div id="accountFormNew">
+        		<form action="#" id="accountForm">
         		  <ul>
         		    <li id="actBank">
         		      <label for="accountBank" class="sectionHeader">Bank:</label>
@@ -107,7 +110,7 @@ accounts.html
         		      </select>
         		    </li>
         		    <li id="actExp" class="hide">
-        		      <label for="accountExipration" class="sectionHeader">Expiration:</label>
+        		      <label for="accountExpiration" class="sectionHeader">Expiration:</label>
         		      <input type="text" id="accountExpiration" name="accountExpiration" maxlength="30" class="accountInput" placeholder="08/2015" onblur="actExp()" />
         		    </li>
         		    <li id="actNum" class="hide">
@@ -117,9 +120,44 @@ accounts.html
         		  </ul>
         		  
         		  <div id="accountSubmitBtn" class="hide">
-                <input type="submit" id="submitAccountForm" value="Add This Account"/>
-              </div>
+                    <input type="submit" id="submitAccountForm" value="Add This Account"/>
+                  </div>
         		</form>
+                </div>
+
+                <!-- Edit Account Form -->
+                <div id="accountFormEdit" class="hide">
+                <form action="#" id="editAccountForm">
+                    <ul>
+                        <li id="editActBank">
+                            <label for="editAccountBank" class="sectionHeader">Bank:</label>
+                            <input type="text" id="editAccountBank" name="editAccountBank" maxlength="20" class="accountInput" placeholder="Bank of America" />
+                        </li>
+                        <li id="editActType">
+                            <label for="editAccountType" class="sectionHeader">Type: </label>
+                            <select id="editAccountType">
+                                <option value="choose">Choose Account Type</option>
+                                <option value="Checking">Checking</option>
+                                <option value="Savings">Savings</option>
+                                <option value="Credit">Credit</option>
+                            </select>
+                        </li>
+                        <li id="editActExp">
+                            <label for="editAccountExpiration" class="sectionHeader">Expiration:</label>
+                            <input type="text" id="editAccountExpiration" name="editAccountExpiration" maxlength="30" class="accountInput" placeholder="08/2015" />
+                        </li>
+                        <li id="editActNum">
+                            <label for="editAccountNumber" class="sectionHeader">Act. #:</label>
+                            <input type="text" id="editAccountNumber" name="editAccountNumber" maxlength="75" class="accountInput" placeholder="1234-5678-9101-1121" />
+                        </li>
+                    </ul>
+
+                    <div id="editAccountSubmitBtn">
+                        <input type="submit" id="editSubmitAccountForm" value="Add This Account"/>
+                    </div>
+                </form>
+                </div>
+
         		</p>
         	</div>
         </div>
@@ -129,8 +167,13 @@ accounts.html
     	<div data-role="footer">
     		<h2>&copy; Jeremy Fox 2012</h2>
     	</div><!-- /footer -->
-  	
+
+        <script type="text/javascript">
+            $.mobile.listAccounts();
+            // Get accounts
+            $.mobile.fetchAccounts();
+        </script>
+
     </div><!-- /page -->
-        
   </body>
 </html>

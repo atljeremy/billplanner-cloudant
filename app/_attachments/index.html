@@ -30,9 +30,9 @@ index.html
 
   </head>
 
-  <body id="home">
+  <body>
 
-    <div data-role="page" id="home" data-dom-cache="true" data-theme="c">
+    <div data-role="page" data-dom-cache="true" data-theme="c">
   
     	<div data-role="header">
         <a href="" class="hidden"></a>
@@ -129,8 +129,9 @@ index.html
     <!-- Underscore is a utility-belt library for JavaScript that provides a lot of the functional programming support -->
     <script src="js/libs/underscore-v1.2.4.js"></script>   
     <!-- jQuery - required for jQuery Mobile -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+    <!-- jQuery CouchDB Plugin -->
+    <script src="js/libs/jquery.couch.js"></script>
     <!-- jquery ui -->
     <script src="js/libs/jquery-ui-1.8.17.custom.min.js"></script>
     <!-- jQuery Validator -->
@@ -147,21 +148,25 @@ index.html
     <script type='text/javascript'>
 		  $(document).ready(function(){ 
 				$('#unoslider').unoslider({
-				  navigation: false,
-				  animation: {  
-            transition: 'slide_out', 
-            variation: 'right',
-            speed: 1000
-          },
-          slideshow: {
-            speed: 5
-          },
-          block: {
-            vertical: 1,
-            horizontal: 1
-          }
+                    navigation: false,
+                    animation: {
+                        transition: 'slide_out',
+                        variation: 'right',
+                        speed: 1000
+                    },
+                    slideshow: {
+                        speed: 5
+                    },
+                    block: {
+                        vertical: 1,
+                        horizontal: 1
+                    }
 				});
-		  });
+
+                // Get accounts
+                $.mobile.fetchAccounts();
+
+          });
 		  
 		  $('#accountsPage').live('pageshow', function(e){
 				// Tabs
